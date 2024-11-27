@@ -17,11 +17,11 @@ async function createDefaultAdmin() {
   try {
     const adminExists = await User.findOne({ role: 'admin' });
     if (!adminExists) {
-      const hashedPassword = await bcrypt.hash('Admin123', 10);
+      const hashedPassword = await bcrypt.hash('Admin1234', 10);
       const adminUser = new User({
         name: 'Admin',
         surname: 'User', // Default surname
-        email: 'first@admin.com',
+        email: 'default@admin.com',
         password: hashedPassword,
         role: 'admin',
         accountNumber: Math.floor(1000000000 + Math.random() * 9000000000).toString(), // Generates a random 10-digit account number
@@ -82,8 +82,8 @@ app.use((err, req, res, next) => {
 
 // SSL Options
 const sslOptions = {
-  key: fs.readFileSync('certificates/localhost+3-key.pem'), 
-  cert: fs.readFileSync('certificates/localhost+3.pem') 
+  key: fs.readFileSync('certificates/localhost-key.pem'), 
+  cert: fs.readFileSync('certificates/localhost.pem') 
 };
 
 // Start HTTPS Server

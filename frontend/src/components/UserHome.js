@@ -1,19 +1,24 @@
+// src/components/UserHome.js
 import React, { useEffect, useState, useCallback } from 'react';
-import { LayoutGrid, DollarSign, FileText } from 'lucide-react';
+import { Home, Send, CreditCard, TrendingUp, Settings, LogOut } from 'lucide-react';
 import PaymentForm from './PaymentForm';
 import Statements from './Statements';
-import { getBalanceAndTransactions, getUserProfile } from '../api'; // Import user profile API
+import FinancialInsights from './FinancialInsights';
+import { getBalanceAndTransactions, getUserProfile } from '../api';
+import { useNavigate } from 'react-router-dom';
 
 const UserHome = ({ token }) => {
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
-  const [accountNumber, setAccountNumber] = useState(''); // State for account number
-  const [selectedTab, setSelectedTab] = useState('makePayment');
+  const [accountNumber, setAccountNumber] = useState('');
+  const [userName, setUserName] = useState('');
+  const [selectedTab, setSelectedTab] = useState('dashboard');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
-  // Fetch user data including balance and account number
-  const fetchUserBalanceAndTransactions = useCallback(async () => {
+  const fetchUserData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -21,10 +26,10 @@ const UserHome = ({ token }) => {
       setBalance(balanceResponse.data.balance);
       setTransactions(balanceResponse.data.transactions);
 
-      const profileResponse = await getUserProfile(token); // Fetch user profile
-      setAccountNumber(profileResponse.data.accountNumber); // Set the account number
+      const profileResponse = await getUserProfile(token);
+      setAccountNumber(profileResponse.data.accountNumber);
+      setUserName(`${profileResponse.data.name} ${profileResponse.data.surname}`);
     } catch (error) {
-      console.error('Failed to fetch balance and transactions:', error);
       setError('Could not load data. Please try again.');
     } finally {
       setLoading(false);
@@ -32,90 +37,298 @@ const UserHome = ({ token }) => {
   }, [token]);
 
   useEffect(() => {
-    fetchUserBalanceAndTransactions();
-  }, [fetchUserBalanceAndTransactions]);
+    fetchUserData();
+  }, [fetchUserData]);
 
   const tabs = [
-    { id: 'makePayment', label: 'Make a Payment', icon: <DollarSign size={20} color="#ADD8E6" /> },
-    { id: 'statements', label: 'View Statements', icon: <FileText size={20} color="#4169E1" /> },
+    { id: 'dashboard', label: 'Dashboard', icon: Home },
+    { id: 'makePayment', label: 'Make a Payment', icon: Send },
+    { id: 'statements', label: 'Statements', icon: CreditCard },
+    { id: 'insights', label: 'Insights', icon: TrendingUp },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 flex flex-col items-center p-6 animate-fade-in">
-      <div className="max-w-6xl w-full">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          {/* Header Section */}
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-8 text-center">
-            <h2 className="text-4xl font-bold text-white mb-6 animate-slide-down">
-              Welcome to Your Dashboard
-            </h2>
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <div
+        className={`flex flex-col ${
+          sidebarExpanded ? 'w-64' : 'w-20'
+        } bg-white transition-all duration-300 shadow-md`}
+      >
+        {/* Logo and Toggle */}
+        <div className="flex items-center justify-between h-16 px-4 bg-gradient-to-r from-orange-500 to-red-500">
+          <div className="text-white text-2xl font-bold">
+            {sidebarExpanded ? 'Customer Portal' : 'CP'}
           </div>
+          <button
+            onClick={() => setSidebarExpanded(!sidebarExpanded)}
+            className="text-white focus:outline-none"
+          >
+            {/* Icon to toggle sidebar */}
+            {sidebarExpanded ? '⮜' : '⮞'}
+          </button>
+        </div>
 
-          {/* Balance and Account Display */}
-          <div className="p-6 bg-blue-50 rounded-xl shadow-lg max-w-md mx-auto -mt-8 mb-6 text-center animate-bounce-slow">
-            <p className="text-gray-600 text-lg">Account Number</p>
-            <p className="text-xl font-semibold text-blue-700 mb-4">{accountNumber}</p>
-            <p className="text-gray-600 text-lg">Current Balance</p>
-            <p className="text-3xl font-bold text-blue-600">R{balance.toFixed(2)}</p>
-          </div>
-
-          {/* Navigation Tabs */}
-          <div className="flex gap-4 justify-center p-4 bg-gray-100 border-b border-gray-200">
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto">
+          <ul className="py-4">
             {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setSelectedTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all duration-300 transform ${
-                  selectedTab === tab.id
-                    ? 'bg-blue-500 text-white shadow-md scale-105'
-                    : 'bg-white text-gray-600 hover:bg-blue-50 border border-gray-200'
-                }`}
-                aria-label={tab.label}
-              >
-                {tab.icon}
-                <span className="text-sm">{tab.label}</span>
-              </button>
+              <li key={tab.id} className="relative">
+                <button
+                  onClick={() => setSelectedTab(tab.id)}
+                  className={`flex items-center w-full px-4 py-2 ${
+                    selectedTab === tab.id
+                      ? 'bg-orange-100 text-orange-600'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <tab.icon className="w-6 h-6" />
+                  {sidebarExpanded && (
+                    <span className="ml-4 text-sm font-medium">{tab.label}</span>
+                  )}
+                </button>
+                {selectedTab === tab.id && (
+                  <span className="absolute inset-y-0 left-0 w-1 bg-orange-500"></span>
+                )}
+              </li>
             ))}
-          </div>
+          </ul>
+        </nav>
 
-          {/* Content Section */}
-          <div className="p-6 animate-fade-in">
-            {loading ? (
-              <p className="text-center text-gray-500">Loading data...</p>
-            ) : error ? (
-              <p className="text-center text-red-500">{error}</p>
-            ) : (
-              <div>
-                {selectedTab === 'makePayment' && (
-                  <PaymentForm token={token} onTransactionUpdate={fetchUserBalanceAndTransactions} balance={balance} />
-                )}
-                {selectedTab === 'statements' && (
-                  <Statements transactions={transactions} />
-                )}
-              </div>
+        {/* Logout Button */}
+        <div className="p-4">
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-red-100"
+          >
+            <LogOut className="w-6 h-6" />
+            {sidebarExpanded && (
+              <span className="ml-4 text-sm font-medium">Logout</span>
             )}
-          </div>
+          </button>
         </div>
       </div>
 
-      {/* Custom Animations */}
-      <style jsx>{`
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes slide-down {
-          from { transform: translateY(-20px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes bounce-slow {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
-        }
-        .animate-fade-in { animation: fade-in 1s ease-in-out forwards; }
-        .animate-slide-down { animation: slide-down 0.6s ease forwards; }
-        .animate-bounce-slow { animation: bounce-slow 2s infinite; }
-      `}</style>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col">
+        {/* Top Navigation */}
+        <header className="flex items-center justify-between h-16 px-6 bg-white shadow-sm">
+          <div>
+            <h1 className="text-2xl font-semibold text-orange-600 capitalize">
+              {selectedTab.replace(/([A-Z])/g, ' $1').trim()}
+            </h1>
+          </div>
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-700">Hello, {userName}</span>
+            {/* User Avatar */}
+            <div className="w-10 h-10 bg-orange-500 text-white rounded-full flex items-center justify-center font-semibold">
+              {userName.charAt(0)}
+            </div>
+          </div>
+        </header>
+
+        {/* Content Area */}
+        <main className="flex-1 p-6 overflow-y-auto">
+          {loading ? (
+            <div className="flex items-center justify-center h-full">
+              <svg
+                className="animate-spin h-10 w-10 text-orange-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+            </div>
+          ) : error ? (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-red-500">{error}</p>
+            </div>
+          ) : (
+            <>
+              {selectedTab === 'dashboard' && (
+                <div>
+                  {/* Dashboard Content */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {/* Balance Card */}
+                    <div className="bg-white shadow rounded-lg p-6">
+                      <h2 className="text-xl font-semibold text-gray-700 mb-4">
+                        Account Balance
+                      </h2>
+                      <p className="text-4xl font-bold text-orange-600">
+                        R{balance.toFixed(2)}
+                      </p>
+                    </div>
+
+                    {/* Account Details */}
+                    <div className="bg-white shadow rounded-lg p-6">
+                      <h2 className="text-xl font-semibold text-gray-700 mb-4">
+                        Account Number
+                      </h2>
+                      <p className="text-2xl font-semibold text-gray-800">
+                        {accountNumber}
+                      </p>
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div className="bg-white shadow rounded-lg p-6">
+                      <h2 className="text-xl font-semibold text-gray-700 mb-4">
+                        Quick Actions
+                      </h2>
+                      <div className="space-y-2">
+                        <button
+                          onClick={() => setSelectedTab('makePayment')}
+                          className="w-full flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition"
+                        >
+                          <Send className="w-5 h-5 mr-2" />
+                          Make a Payment
+                        </button>
+                        <button
+                          onClick={() => setSelectedTab('statements')}
+                          className="w-full flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition"
+                        >
+                          <CreditCard className="w-5 h-5 mr-2" />
+                          View Statements
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Recent Transactions */}
+                  <div className="mt-8">
+                    <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+                      Recent Transactions
+                    </h2>
+                    <div className="bg-white shadow rounded-lg">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="bg-gray-100 text-left text-gray-600">
+                            <th className="py-2 px-4">Date</th>
+                            <th className="py-2 px-4">Description</th>
+                            <th className="py-2 px-4">Amount</th>
+                            <th className="py-2 px-4">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {transactions.slice(0, 5).map((transaction) => (
+                            <tr key={transaction._id} className="border-b">
+                              <td className="py-2 px-4">
+                                {new Date(transaction.createdAt).toLocaleDateString()}
+                              </td>
+                              <td className="py-2 px-4">{transaction.displayText}</td>
+                              <td
+                                className={`py-2 px-4 ${
+                                  transaction.transactionType === 'incoming'
+                                    ? 'text-green-600'
+                                    : 'text-red-600'
+                                }`}
+                              >
+                                R{transaction.amount}
+                              </td>
+                              <td className="py-2 px-4">
+                                <span
+                                  className={`px-2 py-1 rounded-full text-xs ${
+                                    transaction.status === 'Approved'
+                                      ? 'bg-green-100 text-green-600'
+                                      : 'bg-yellow-100 text-yellow-600'
+                                  }`}
+                                >
+                                  {transaction.status}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <div className="p-4 text-right">
+                        <button
+                          onClick={() => setSelectedTab('statements')}
+                          className="text-orange-600 hover:underline"
+                        >
+                          View All Transactions
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedTab === 'makePayment' && (
+                <PaymentForm
+                  token={token}
+                  onTransactionUpdate={fetchUserData}
+                  balance={balance}
+                />
+              )}
+
+              {selectedTab === 'statements' && (
+                <Statements transactions={transactions} />
+              )}
+
+              {selectedTab === 'insights' && (
+                <FinancialInsights transactions={transactions} />
+              )}
+
+              {selectedTab === 'settings' && (
+                <div>
+                  <h2 className="text-2xl font-semibold text-gray-700 mb-6">
+                    Settings
+                  </h2>
+                  {/* Settings Form */}
+                  <form className="space-y-6 max-w-lg">
+                    <div>
+                      <label className="block text-gray-700">First Name</label>
+                      <input
+                        type="text"
+                        value={userName.split(' ')[0]}
+                        className="w-full mt-1 p-2 border border-gray-300 rounded-lg"
+                        disabled
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700">Last Name</label>
+                      <input
+                        type="text"
+                        value={userName.split(' ')[1]}
+                        className="w-full mt-1 p-2 border border-gray-300 rounded-lg"
+                        disabled
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700">Account Number</label>
+                      <input
+                        type="text"
+                        value={accountNumber}
+                        className="w-full mt-1 p-2 border border-gray-300 rounded-lg"
+                        disabled
+                      />
+                    </div>
+                    {/* Additional settings can be added here */}
+                  </form>
+                </div>
+              )}
+            </>
+          )}
+        </main>
+      </div>
     </div>
   );
 };

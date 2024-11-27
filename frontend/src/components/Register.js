@@ -1,3 +1,4 @@
+// src/components/Register.js
 import React, { useState } from 'react';
 import { Eye, EyeOff, User, Mail, Lock, CreditCard, AlertCircle } from 'lucide-react';
 import api from '../api';
@@ -87,8 +88,8 @@ const Register = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                    placeholder="John"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                    placeholder="Jackieee"
                   />
                 </div>
               </div>
@@ -102,8 +103,8 @@ const Register = () => {
                     name="surname"
                     value={formData.surname}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                    placeholder="Doe"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                    placeholder="Dorsy"
                   />
                 </div>
               </div>
@@ -122,7 +123,7 @@ const Register = () => {
                   name="idNumber"
                   value={formData.idNumber}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-400 focus:border-transparent"
                   placeholder="Enter your 13-digit ID number"
                   maxLength="13"
                 />
@@ -142,8 +143,8 @@ const Register = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                  placeholder="john@example.com"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                  placeholder="jackiee@example.com"
                 />
               </div>
             </div>
@@ -157,7 +158,7 @@ const Register = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-12 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                  className="w-full pl-10 pr-12 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-400 focus:border-transparent"
                   placeholder="Choose a strong password"
                 />
                 <button
@@ -175,16 +176,16 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-500 via-red-500 to-red-700 flex items-center justify-center p-4">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-300/30 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-300 opacity-30 rounded-full blur-2xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-400 opacity-20 rounded-full blur-2xl animate-pulse delay-1000"></div>
       </div>
 
       <div className="relative w-full max-w-md">
-        <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-8">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
+            <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-red-600 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
               <User className="h-8 w-8 text-white" />
             </div>
             <h2 className="text-3xl font-bold text-gray-800">Create Account</h2>
@@ -212,7 +213,7 @@ const Register = () => {
                 <button
                   type="button"
                   onClick={() => setCurrentStep(prev => prev - 1)}
-                  className="flex-1 py-3 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 transition-colors duration-200"
+                  className="flex-1 py-3 border border-orange-500 text-orange-500 rounded-lg hover:bg-orange-50 transition-colors duration-200"
                 >
                   Back
                 </button>
@@ -220,7 +221,7 @@ const Register = () => {
               <button
                 type="submit"
                 disabled={loading || !validateStep(currentStep)}
-                className={`flex-1 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 ${
+                className={`flex-1 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-lg shadow-lg hover:from-orange-600 hover:to-red-700 transition-all duration-200 ${
                   (loading || !validateStep(currentStep)) ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
@@ -232,7 +233,7 @@ const Register = () => {
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               Already have an account?{' '}
-              <a href="/login" className="text-blue-600 font-medium hover:text-blue-700 transition-colors duration-200">
+              <a href="/login" className="text-orange-600 font-medium hover:text-orange-700 transition-colors duration-200">
                 Sign in
               </a>
             </p>

@@ -1,3 +1,4 @@
+// src/components/Statements.js
 import React, { useEffect, useState } from 'react';
 import { getPaymentHistory, getUserProfile } from '../api';
 import FinancialInsights from './FinancialInsights';
@@ -14,7 +15,6 @@ const Statements = () => {
           const profileResponse = await getUserProfile(token);
           setUserId(profileResponse.data._id);
         } catch (error) {
-          console.error('Failed to fetch user profile:', error);
         }
       }
     };
@@ -28,7 +28,6 @@ const Statements = () => {
           const response = await getPaymentHistory(token);
           setTransactions(response.data);
         } catch (error) {
-          console.error('Failed to fetch transactions:', error);
         }
       }
     };
@@ -36,14 +35,14 @@ const Statements = () => {
   }, [token]);
 
   return (
-    <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-md">
-      <h3 className="text-3xl font-bold text-blue-700 mb-6">Statements</h3>
+    <div className="p-6 bg-gradient-to-br from-orange-50 to-red-50 rounded-lg shadow-md">
+      <h3 className="text-3xl font-bold text-orange-700 mb-6">Statements</h3>
       
       <ul className="space-y-4">
         {transactions.length > 0 ? (
           transactions.map((transaction) => (
             <li key={transaction._id} className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-between">
-              <span className="text-blue-700 font-semibold">
+              <span className="text-orange-700 font-semibold">
                 {new Date(transaction.createdAt).toLocaleDateString()} - {transaction.displayText}
               </span>
               <span className={`font-medium ${transaction.transactionType === 'incoming' ? 'text-green-600' : 'text-red-600'}`}>
@@ -55,7 +54,7 @@ const Statements = () => {
             </li>
           ))
         ) : (
-          <p className="text-blue-600">No transactions available.</p>
+          <p className="text-orange-600">No transactions available.</p>
         )}
       </ul>
 

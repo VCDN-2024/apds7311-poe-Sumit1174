@@ -1,3 +1,4 @@
+// src/components/Login.js
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, AlertCircle } from 'lucide-react';
 import api from '../api';
@@ -49,21 +50,20 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 flex items-center justify-center p-4">
-      {/* Animated Background Elements */}
+    <div className="min-h-screen bg-gradient-to-br from-orange-500 via-red-500 to-red-700 flex items-center justify-center p-4">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-300/30 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-300 opacity-30 rounded-full blur-2xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-400 opacity-20 rounded-full blur-2xl animate-pulse delay-1000"></div>
       </div>
 
       <div className="relative w-full max-w-md">
-        <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-8">
           <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full mx-auto mb-6 flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300">
+            <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-red-600 rounded-full mx-auto mb-6 flex items-center justify-center shadow-lg">
               <Lock className="h-10 w-10 text-white" />
             </div>
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back!</h2>
-            <p className="text-gray-600">Please sign in to continue</p>
+            <p className="text-gray-600">Sign in to your account</p>
           </div>
 
           {error && (
@@ -83,7 +83,7 @@ const Login = ({ onLogin }) => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
                   placeholder="you@example.com"
                   required
                 />
@@ -99,7 +99,7 @@ const Login = ({ onLogin }) => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-12 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                  className="w-full pl-10 pr-12 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
                   placeholder="Enter your password"
                   required
                 />
@@ -116,9 +116,9 @@ const Login = ({ onLogin }) => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-lg
-                hover:from-blue-600 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200
-                focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 flex items-center justify-center
+              className={`w-full py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-lg shadow-lg
+                hover:from-orange-600 hover:to-red-700 transform hover:-translate-y-0.5 transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex items-center justify-center
                 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {loading ? (
@@ -140,7 +140,7 @@ const Login = ({ onLogin }) => {
               Don't have an account?{' '}
               <a
                 href="/register"
-                className="text-blue-600 font-medium hover:text-blue-700 transition-colors duration-200"
+                className="text-orange-600 font-medium hover:text-orange-700 transition-colors duration-200"
               >
                 Create Account
               </a>
