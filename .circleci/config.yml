@@ -53,8 +53,8 @@ jobs:
           name: Run SonarCloud Analysis
           command: |
             sonar-scanner \
-              -Dsonar.organization="thiyan-ouwish" \
-              -Dsonar.projectKey="thiyan-ouwish_customer-portal" \
+              -Dsonar.organization="sumit1174" \
+              -Dsonar.projectKey="Sumit1174_apds7311-poe-Sumit1174" \
               -Dsonar.sources="backend,frontend/src" \
               -Dsonar.host.url="https://sonarcloud.io" \
               -Dsonar.login=$SONAR_TOKEN
