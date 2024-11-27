@@ -24,7 +24,6 @@ Welcome to the **Customer Portal**, your one-stop solution for secure and effici
 
 ## Features
 
-Link to public Circle Ci Repo : https://github.com/Sumit1174/apds7311-poe-Sumit1174
 
 - **Secure Foreign Payments**: Facilitate secure transactions with international partners effortlessly.
 - **Easy International Payments**: Send and receive payments globally with just a few clicks.
